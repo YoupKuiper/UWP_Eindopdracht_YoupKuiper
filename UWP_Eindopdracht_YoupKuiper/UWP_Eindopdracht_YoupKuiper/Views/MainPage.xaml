@@ -5,23 +5,120 @@
     xmlns:local="using:UWP_Eindopdracht_YoupKuiper"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:UWP_Eindopdracht_YoupKuiper.Models"
+    xmlns:Helpers="using:UWP_Eindopdracht_YoupKuiper.Helpers"
     mc:Ignorable="d">
 
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup>
+            <VisualState x:Name="visualStateDesktop">
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="700" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="btnBack.Visibility" Value="Visible" />
+                </VisualState.Setters>
+            </VisualState>
+
+            <VisualState x:Name="visualStateMobile">
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="0" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="btnBack.Visibility" Value="Collapsed" />
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="MyList">
-            <ListView.ItemTemplate>
-                <DataTemplate>
+        <Button HorizontalAlignment="Center" VerticalAlignment="center"  Visibility="Collapsed" x:Name="btnBack">Back</Button>
+        
+        <SplitView x:Name="MySplitView" DisplayMode="CompactOverlay"  IsPaneOpen="False" 
+               CompactPaneLength="50" OpenPaneLength="170">
+            <SplitView.Pane>
+                <StackPanel Background="Gray">
+                    <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
+                    Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
+                    <Helpers:MyListView ItemsSource="{x:Bind VM.Categories}" Margin="0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Category">
+                                <StackPanel  Orientation="Horizontal">
+                                    <Button FontFamily="Segoe MDL2 Assets" 
+                        Width="30" Height="50" Background="Transparent">
+                           
+                                    </Button>
+                                    <Button Background="Transparent" Tag="{x:Bind Id}" Click="CategoryButton_ClickAsync">
+                                        <TextBlock FontSize="18" Text="{x:Bind Name}"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </Helpers:MyListView>
+                    <StackPanel Orientation="Horizontal">
+                        <Button FontFamily="Segoe MDL2 Assets" 
+                        Width="39" Height="50" Background="Transparent">
+                            <TextBlock FontSize="18" VerticalAlignment="Center">
+                            </TextBlock>
+                        </Button>
+                        <Button x:Name="likedButton" Click="likedButton_Click" FontFamily="Segoe MDL2 Assets" 
+                         Height="50" Background="Transparent" HorizontalAlignment="Center">
+                            <TextBlock FontSize="18">Liked
+                            </TextBlock>
+                        </Button>
+                    </StackPanel>                   
+                    <StackPanel Orientation="Horizontal">
+                                <Button FontFamily="Segoe MDL2 Assets" 
+                        Width="39" Height="50" Background="Transparent">
+                                    <TextBlock FontSize="18" VerticalAlignment="Center">
+                                    </TextBlock>
+                                </Button>
+                        <Button x:Name="loginButton" Click="loginButton_Click" 
+                         Height="50" Background="Transparent">
+                            <TextBlock x:Name="loginText" FontSize="18">
+                            </TextBlock>
+                                </Button>
+                            </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button FontFamily="Segoe MDL2 Assets" 
+                        Width="39" Height="50" Background="Transparent">
+                            <TextBlock FontSize="18" VerticalAlignment="Center">
+                            </TextBlock>
+                        </Button>
+                        <Button x:Name="registerButton" FontFamily="Segoe MDL2 Assets" 
+                         Height="50" Background="Transparent" Click="registerButton_Click">
+                            <TextBlock FontSize="18">Register
+                            </TextBlock>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </SplitView.Pane>
+                <SplitView.Content>
                     <Grid>
-                        <StackPanel>
-                            <Rectangle HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="10" Width="35" Fill="CornflowerBlue"></Rectangle>
+                    <Helpers:MyListView x:Name="myLV" ItemsSource="{x:Bind VM.NewsItems, Mode=OneWay}"
+                  ItemClick="itemClicked"
+                  IsItemClickEnabled="True">
 
-                            <TextBlock Text="{Binding title}" ></TextBlock>
-                            <TextBlock Text="{Binding content}" ></TextBlock>
-                        </StackPanel>
-
-                    </Grid>  
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Result">
+                                <Grid Width="600">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <Image   Source="{x:Bind Image}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="{x:Bind Title}" TextWrapping="WrapWholeWords"/>
+                                        <CheckBox Unchecked="CheckBox_Unchecked" Tag="{x:Bind Id}" Checked="CheckBox_Checked" IsChecked="{x:Bind IsLiked, Mode=OneWay}">Liked</CheckBox>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </Helpers:MyListView>
+                </Grid>
+                </SplitView.Content>
+            </SplitView>
     </Grid>
 </Page>

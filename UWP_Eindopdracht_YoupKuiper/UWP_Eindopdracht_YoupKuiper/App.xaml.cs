@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UWP_Eindopdracht_YoupKuiper.Views;
+using Windows.UI.Core;
+using Windows.Foundation.Metadata;
 
 namespace UWP_Eindopdracht_YoupKuiper
 {
@@ -23,6 +25,8 @@ namespace UWP_Eindopdracht_YoupKuiper
     /// </summary>
     sealed partial class App : Application
     {
+        public object HardwareButtons { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -50,6 +54,7 @@ namespace UWP_Eindopdracht_YoupKuiper
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Navigated += RootFrame_Navigated;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -58,6 +63,13 @@ namespace UWP_Eindopdracht_YoupKuiper
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+
+                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                    AppViewBackButtonVisibility.Visible :
+                    AppViewBackButtonVisibility.Collapsed;
             }
 
             if (e.PrelaunchActivated == false)
@@ -73,6 +85,43 @@ namespace UWP_Eindopdracht_YoupKuiper
                 Window.Current.Activate();
             }
         }
+
+        private void RootFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            // Each time a navigation event occurs, update the Back button's visibility  
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                ((Frame)sender).CanGoBack ?
+                AppViewBackButtonVisibility.Visible :
+                AppViewBackButtonVisibility.Collapsed;
+        }
+
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+        }
+
+        public static Platform DetectPlatform()
+        {
+            bool isHardwareButtonsAPIPresent = ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons");
+
+            if (isHardwareButtonsAPIPresent)
+            {
+                return Platform.WindowsPhone;
+            }
+            else
+            {
+                return Platform.Windows;
+            }
+        }
+
+
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails

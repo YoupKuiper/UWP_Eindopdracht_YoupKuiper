@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SplashScreenSource>C:\Users\youp\Pictures\uwp_splash.png</SplashScreenSource>
+    <SmallTileSource>C:\Users\youp\Pictures\smalltile_uwp.png</SmallTileSource>
+    <MediumTileSource>C:\Users\youp\Pictures\smalltile_uwp.png</MediumTileSource>
+    <WideTileSource>C:\Users\youp\Pictures\smalltile_uwp.png</WideTileSource>
+    <LargeTileSource>C:\Users\youp\Pictures\smalltile_uwp.png</LargeTileSource>
+    <AppIconSource>C:\Users\youp\Pictures\small_uwp.png</AppIconSource>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DeviceId>DA831653-315E-41D9-BF63-CCCE346F4E9C</DeviceId>
+    <UseEmulator>false</UseEmulator>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
+    <UseEmulator>true</UseEmulator>
+  </PropertyGroup>
+</Project>
